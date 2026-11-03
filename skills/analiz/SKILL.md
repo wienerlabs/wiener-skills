@@ -14,7 +14,7 @@ Girdi: $ARGUMENTS
 ## 1. Dokümanı oku (token tasarrufuyla)
 
 - PDF dosya yolu verildiyse önce metne çevir, görsel olarak okuma:
-  `K=$(~/.claude/skills/ortak/scripts/notlar-dizini.sh kaynaklar); pdftotext -layout "<pdf>" "$K/<tarih>-<kısa-ad>.txt"` sonra metni oku.
+  `K=$(${CLAUDE_SKILL_DIR}/../ortak/scripts/notlar-dizini.sh kaynaklar); pdftotext -layout "<pdf>" "$K/<tarih>-<kısa-ad>.txt"` sonra metni oku.
   Çıktı boş ya da anlamsızsa (taranmış PDF) o zaman sayfaları Read ile görsel oku.
 - PDF mesaja doğrudan eklendiyse zaten okumuşsun; tekrar çıkarma.
 - Toplantı notu / yapıştırılan metin: olduğu gibi kullan.

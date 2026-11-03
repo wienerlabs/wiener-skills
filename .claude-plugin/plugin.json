@@ -1,0 +1,14 @@
+{
+  "name": "wiener",
+  "displayName": "Wiener Skills",
+  "version": "0.1.0",
+  "description": "Claude Code için Türkçe iş akışı skill'leri: /analiz, /uyku, /gunaydin, /devir, /devam, /kontrol, /rapor, /haftalik, /mobil-tur.",
+  "author": {
+    "name": "Wiener Labs",
+    "url": "https://wienerlabs.xyz"
+  },
+  "homepage": "https://github.com/wienerlabs/wiener-skills",
+  "repository": "https://github.com/wienerlabs/wiener-skills",
+  "license": "MIT",
+  "keywords": ["türkçe", "turkish", "workflow", "skills", "overnight", "handoff", "code-review"]
+}

@@ -1,17 +1,28 @@
-# claude-skills-tr
+<div align="center">
 
-**Claude Code için Türkçe iş akışı skill'leri.** Her gün yazdığın uzun prompt'ları tek komuta çevirir: patronun PDF'ini koda dönüştürür, sen uyurken güvenli sınırlar içinde çalışmaya devam eder, uzayan session'ı temiz bir session'a devreder.
+# Wiener Skills
 
-![Lisans: MIT](https://img.shields.io/badge/lisans-MIT-blue)
-![Platform: macOS](https://img.shields.io/badge/platform-macOS-lightgrey)
-![Claude Code](https://img.shields.io/badge/Claude%20Code-skills-d97757)
-![Testler](https://img.shields.io/badge/testler-95%20ba%C5%9Far%C4%B1l%C4%B1-brightgreen)
+Claude Code için Türkçe iş akışı skill'leri: patronun PDF'ini koda dönüştür,<br />
+sen uyurken güvenli sınırlar içinde çalışsın, uzayan session'ı temiz bir session'a devret.
 
-> *English summary at the bottom.*
+[![Lisans: MIT](https://img.shields.io/badge/lisans-MIT-1c5cab)](LICENSE)
+[![Claude Code plugin](https://img.shields.io/badge/Claude%20Code-plugin-1c5cab)](https://code.claude.com/docs/en/plugins)
+[![macOS](https://img.shields.io/badge/platform-macOS-1c5cab)](#gereksinimler-ve-sınırlamalar)
+[![Testler](https://img.shields.io/badge/testler-102%20ba%C5%9Far%C4%B1l%C4%B1-1c5cab)](#testler)
 
----
+[Kurulum](#kurulum) · [Komutlar](#komutlar) · [/uyku](#uyku--sen-uyurken-çalışsın) · [Notlar nerede](#notlar-nerede-durur)
 
-## Bir bakışta
+</div>
+
+```
+/plugin install wiener --marketplace wienerlabs/wiener-skills
+```
+
+Her gün yazdığın uzun prompt'lar tek komuta dönüşür: `/analiz` deyip PDF'i bırakırsın, `/uyku` deyip yatarsın, `/devir` deyip temiz bir session'da devam edersin. Skill'ler düz Markdown'dır; ne yaptıklarını okuyabilir, istediğin gibi değiştirebilirsin.
+
+Wiener Skills, [Wiener Tools](https://tools.wienerlabs.xyz) ailesinden; [Wiener Labs](https://wienerlabs.xyz) yapımı.
+
+## Komutlar
 
 | Komut | Ne yapar |
 |---|---|
@@ -20,22 +31,40 @@
 | [`/gunaydin`](#gunaydin--sabah-incelemesi) | Gece raporunu özetler, kritik kararları seçenekli sorar, onaylananları uygular. |
 | [`/devir`](#devir-ve-devam--uzayan-sessionı-devret) | Uzayan session'ın "nerede kaldık" notunu yazar. |
 | [`/devam`](#devir-ve-devam--uzayan-sessionı-devret) | Yeni session'da o notu okuyup kaldığı yerden sürer. |
-| [`/kontrol`](#kontrol--push-öncesi) | Push öncesi testler, lint, tip kontrolü + sızmış secret, debug log'u, çakışma işareti taraması. |
+| [`/kontrol`](#kontrol--push-öncesi) | Push öncesi testler, lint, tip kontrolü; sızmış secret, debug log'u, çakışma işareti taraması. |
 | [`/rapor`](#rapor--patrona-durum-raporu) | Patrona/yöneticiye teknik olmayan durum raporu. |
 | [`/haftalik`](#haftalik--haftalık-özet) | Bütün projelerindeki haftalık commit'lerden tek özet. |
 | [`/mobil-tur`](#mobil-tur--simülatörde-görsel-tur) | Uygulamayı simülatörde gezer, bozuk ekranları raporlar. |
 
-## Hızlı başlangıç
+Komutları doğrudan `/analiz`, `/uyku` diye yazarsın. Aynı adda başka bir komutun varsa tam adı kullan: `/wiener:analiz`, `/wiener:uyku`.
 
-```bash
-git clone https://github.com/mehmethayirli/claude-skills-tr.git
-cd claude-skills-tr
-./kur.sh
+## Kurulum
+
+Claude Code'da (terminal, masaüstü uygulaması ya da VS Code):
+
+```
+/plugin install wiener --marketplace wienerlabs/wiener-skills
 ```
 
-`kur.sh` skill'leri `~/.claude/skills/` altına **symlink** ile bağlar; repoyu güncellediğinde (`git pull`) skill'ler de güncellenir. Aynı adda bir skill'in varsa silmez, yedekler. Kopyalamayı tercih edersen `./kur.sh --kopyala`, kaldırmak için `./kur.sh --kaldir`.
+Claude Code 2.1.275'ten eskiyse iki adımda:
 
-Yeni bir Claude Code session'ı aç ve `/` yaz — skill'ler listede. Açık bir session'daysan önce `/reload-skills`.
+```
+/plugin marketplace add wienerlabs/wiener-skills
+/plugin install wiener@wiener-tools
+```
+
+Açık bir session'daysan `/reload-plugins` yaz ya da yeni bir session aç. Terminal, masaüstü uygulaması ve VS Code aynı ayarları okur; birinde kurman yeterli.
+
+**Kabuktan kurmak istersen:**
+
+```bash
+claude plugin marketplace add wienerlabs/wiener-skills
+claude plugin install wiener@wiener-tools
+```
+
+**Güncelleme:** `claude plugin update wiener` ya da `/plugin` panelinden otomatik güncellemeyi aç. **Kaldırma:** `claude plugin uninstall wiener`.
+
+**Geliştirici kurulumu.** Skill'leri düzenleyip anında denemek istersen repoyu klonla ve `./kur.sh` çalıştır. Skill'ler `~/.claude/skills/` altına symlink ile bağlanır; kaydettiğin değişikliği Claude Code hemen görür. `./kur.sh --kaldir` geri alır. Plugin'le birlikte kurma: iki kopya olur ve kısa adlar (`/uyku`) kişisel kopyaya gider.
 
 ## Tipik günler
 
@@ -46,11 +75,11 @@ Yeni bir Claude Code session'ı aç ve `/` yaz — skill'ler listede. Açık bir
 /rapor             ← patrona gönderilecek özet
 ```
 
-**Akşam, iş bitmedi:**
+**Akşam oldu, iş bitmedi:**
 ```
 /uyku testleri tamamla, ödeme ekranındaki hataları düzelt
                    ← yat. Kapağı açık bırak.
-/gunaydin          ← sabah: rapor + kritik kararlar
+/gunaydin          ← sabah: rapor ve kritik kararlar
 ```
 
 **Session 400k token'a ulaştı:**
@@ -69,12 +98,12 @@ Yeni bir Claude Code session'ı aç ve `/` yaz — skill'ler listede. Açık bir
 /analiz ~/Downloads/brief.pdf --onaysiz
 ```
 
-1. **Okur.** PDF'i önce `pdftotext` ile metne çevirir (görsel okumaya göre çok daha az token). Taranmış PDF'lerde görsele düşer.
-2. **Maddelere ayırır:** `R1, R2, …` — her biri test edilebilir, kaynağa referanslı. Toplantı notlarındaki "belki", "ileride" gibi ifadeleri gereksinim saymaz.
-3. **Kodla karşılaştırır:** her madde için **Var / Kısmen / Yok / Çelişiyor** + kanıt (`dosya:satır`). Çok maddeli işlerde taramayı daha ucuz bir modelle çalışan bir subagent'a verir.
+1. **Okur.** PDF'i önce `pdftotext` ile metne çevirir; görsel okumaya göre çok daha az token harcar. Taranmış PDF'lerde görsele düşer.
+2. **Maddelere ayırır:** `R1, R2, …` — her biri test edilebilir ve kaynağa referanslı. Toplantı notlarındaki "belki", "ileride" gibi ifadeleri gereksinim saymaz.
+3. **Kodla karşılaştırır:** her madde için **Var / Kısmen / Yok / Çelişiyor** ve kanıt (`dosya:satır`). Çok maddeli işlerde taramayı daha ucuz bir modelle çalışan bir subagent'a verir.
 4. **Sadece riskli maddeleri sorar:** mevcut davranışı değiştiren (çelişen) ve iki şekilde yorumlanabilen maddeler. Gerisini onay beklemeden kodlar. `--onaysiz` ile hiç sormaz: çelişen maddelerde doküman kazanır, muğlak maddeler "patrona sorulacaklar" listesine gider.
-5. **Uygular:** ayrı bir dalda (`istek/<ad>`), madde başına commit (`feat(R3,R4): …`), test ekleyerek.
-6. **İz bırakır:** `docs/istekler/<tarih>-<ad>.md` — madde tablosu, sonuçlar, patrona gönderilebilecek soru listesi. `/rapor` ilerlemeyi buradan okur.
+5. **Uygular:** ayrı bir dalda (`istek/<ad>`), madde başına commit atarak (`feat(R3,R4): …`) ve test ekleyerek.
+6. **İz bırakır:** `docs/istekler/<tarih>-<ad>.md` — madde tablosu, sonuçlar ve patrona gönderilebilecek soru listesi. `/rapor` ilerlemeyi buradan okur.
 
 ## `/uyku` — sen uyurken çalışsın
 
@@ -96,8 +125,8 @@ Yeni bir Claude Code session'ı aç ve `/` yaz — skill'ler listede. Açık bir
 **Kurallar:**
 - **Kritik kararları vermez:** geri dönüşü zor ya da proje dışına dokunan işler, şema/veri değişikliği, yeni ücretli bağımlılık, public API değişikliği, mimari tercih, iki makul yorumu olan gereksinim. Bunları seçenekleri ve önerisiyle rapora yazar, etrafından dolaşıp bağımsız işlere devam eder.
 - **Küçük kararları verir** (isimlendirme, iç yapı, test, refactor) ve gerekçesini rapora yazar.
-- **Her görev ayrı commit** — sabah tek tek geri alınabilir. Çalışmayan kod commit edilmez.
-- **Ana context'i küçük tutar:** büyük görevleri sırayla subagent'lara verir, sadece özetlerini alır.
+- **Her görevi ayrı commit'ler;** sabah tek tek geri alınabilir. Çalışmayan kodu commit'lemez.
+- **Ana context'i küçük tutar:** büyük görevleri sırayla subagent'lara verir, yalnızca özetlerini alır.
 
 ### Neden gerçekten sabaha kadar sürüyor?
 
@@ -105,7 +134,7 @@ Gece işinde asıl risk limitler değil, Claude'un 01:00'de "bitti" deyip durmas
 
 | Hook | Görevi |
 |---|---|
-| **Stop** | Uyku modu açıkken turun erken bitmesine izin vermez, Claude'u sıradaki göreve yönlendirir. Bitiş saati ya da pil eşiğinde önce "raporu tamamla" der, sonra durdurur. İlerleme olmadan 3 kez durmaya çalışırsa takıldı sayar ve bırakır — boşa token yakan döngü olmaz. |
+| **Stop** | Uyku modu açıkken turun erken bitmesine izin vermez, Claude'u sıradaki göreve yönlendirir. Bitiş saati ya da pil eşiğinde önce "raporu tamamla" der, sonra durdurur. İlerleme olmadan 3 kez durmaya çalışırsa takıldı sayar ve bırakır; boşa token yakan döngü olmaz. |
 | **PreToolUse** | `git push`, `merge`, `rebase`, `reset --hard`, `clean -f`, PR açma, deploy, publish, gerçek veritabanına migration ve dışarıya mesaj/e-posta gönderen MCP araçlarını engeller. Claude engeli kritik karar olarak rapora yazar. |
 | **StopFailure** | Tur bir API hatasıyla biterse (aşırı yük, sunucu hatası, rate limit) bekleyip Claude'u yeniden uyandırır; gece boyunca en fazla 5 kez. Kalıcı hatalarda (kimlik doğrulama, fatura) durur. |
 
@@ -122,7 +151,7 @@ stateDiagram-v2
 ```
 
 **Gece için iki şart:**
-1. Session **auto mode**'da olmalı. Değilse `/uyku` başlamadan uyarır (ilk izin isteğinde sabaha kadar takılır).
+1. Session **auto mode**'da olmalı. Değilse `/uyku` başlamadan uyarır; yoksa ilk izin isteğinde sabaha kadar takılır.
 2. **Kapağı açık bırak.** Mac'in boşta uyuması engellenir, ama kapak kapanınca macOS her durumda uyur.
 
 ## `/gunaydin` — sabah incelemesi
@@ -146,7 +175,7 @@ Uzun bir session'a devam etmek pahalıdır: her mesajda bütün konuşma yeniden
 
 Not şunları içerir: amaç, yapılanlar, **şu an nerede kalındı**, sıradaki adımlar, **alınan kararlar** (yeniden tartışılmasın), **denenip işe yaramayanlar** (tekrar denenmesin), açık sorular, önemli dosyalar, çalıştırma komutları.
 
-- Commit edilmemiş değişiklik varsa ve özellik dalındaysan `wip:` commit'i atar — yeni session başka bir worktree'de açılsa da iş kaybolmaz.
+- Commit edilmemiş değişiklik varsa ve özellik dalındaysan `wip:` commit'i atar; yeni session başka bir worktree'de açılsa da iş kaybolmaz.
 - Claude Code masaüstü uygulamasında yeni session'ı senin için açmayı teklif eder (aynı klasör, ilk mesaj `/devam`).
 - `/devam` dal uyuşmazlığını ve nottan sonraki commit'leri kontrol eder, 4-6 satır özet verir ve ilk adımdan hemen başlar.
 
@@ -157,7 +186,7 @@ Not şunları içerir: amaç, yapılanlar, **şu an nerede kalındı**, sıradak
 /kontrol --tam          ← build ve yavaş kontroller dahil
 ```
 
-Projenin kendi test/lint/tip kontrolü komutlarını bulur (CLAUDE.md → README → `package.json` / `pyproject` / `go.mod` / `Cargo.toml`) ve çalıştırır; geçenler için sadece ✅ yazar, çıktıyı context'e dökmez. Ardından taban dala göre **eklenen satırları** tarar:
+Projenin kendi test, lint ve tip kontrolü komutlarını bulur (CLAUDE.md → README → `package.json` / `pyproject` / `go.mod` / `Cargo.toml`) ve çalıştırır; geçenler için sadece ✅ yazar, çıktıyı context'e dökmez. Ardından taban dala göre **eklenen satırları** tarar:
 
 - sızmış secret (Anthropic, OpenAI, AWS, GitHub, Slack, Google anahtarları, private key, `password = "..."`)
 - debug kalıntısı (`console.log`, `debugger`, `binding.pry`, `pdb.set_trace` …)
@@ -183,7 +212,7 @@ Son rapordan bu yana git geçmişini, `/analiz` dokümanlarındaki ilerlemeyi ve
 /haftalik 7 ~/Projeler
 ```
 
-`~/Documents/GitHub` altındaki bütün repolarda senin commit'lerini toplar (worktree'ler tek proje sayılır), proje başına 2-4 maddelik özet çıkarır.
+`~/Documents/GitHub` altındaki bütün repolarda senin commit'lerini toplar (worktree'ler tek proje sayılır) ve proje başına 2-4 maddelik özet çıkarır.
 
 ## `/mobil-tur` — simülatörde görsel tur
 
@@ -192,7 +221,7 @@ Son rapordan bu yana git geçmişini, `/analiz` dokümanlarındaki ilerlemeyi ve
 /mobil-tur giriş, sepet, ödeme --karanlik
 ```
 
-iOS (native, Expo/React Native, Flutter) ve Android'de uygulamayı derleyip ana ekranları gezer; taşan metin, safe area çakışması, takılı yükleme ekranı, klavyenin kapattığı alanlar gibi sorunları tablo halinde raporlar. Token için ekran görüntülerini yarım çözünürlükte alır, şüpheli yerleri yakınlaştırır. Düzeltmeyi sonda sorar.
+iOS (native, Expo/React Native, Flutter) ve Android'de uygulamayı derleyip ana ekranları gezer; taşan metin, safe area çakışması, takılı yükleme ekranı, klavyenin kapattığı alanlar gibi sorunları tablo hâlinde raporlar. Token için ekran görüntülerini yarım çözünürlükte alır, şüpheli yerleri yakınlaştırır. Düzeltmeyi sonda sorar.
 
 ---
 
@@ -204,22 +233,22 @@ iOS (native, Expo/React Native, Flutter) ve Android'de uygulamayı derleyip ana 
 | Uyku modu durumu | `~/.local/state/claude-uyku/<session-id>/` |
 | `/analiz` dokümanları | Repoda: `docs/istekler/` |
 
-Notlar repo dışında durur — commit'lere karışmaz. Anahtar ana reponun yolu olduğu için **aynı reponun bütün worktree'leri aynı notları görür**.
+Notlar repo dışında durur, commit'lere karışmaz. Anahtar ana reponun yolu olduğu için **aynı reponun bütün worktree'leri aynı notları görür**.
 
 ## Token tasarrufu
 
-- Kullanılmayan skill'in maliyeti yalnızca açıklama satırıdır; `/uyku`, `/gunaydin`, `/mobil-tur` sadece sen çağırınca yüklenir, açıklamaları bile context'e girmez.
+- Kullanılmayan skill'in maliyeti yalnızca açıklama satırıdır. `/uyku`, `/gunaydin` ve `/mobil-tur` sadece sen çağırınca yüklenir; açıklamaları bile context'e girmez.
 - PDF'ler metne çevrilir, diff'ler okunmaz (commit mesajları ve `--stat` yeterli), test çıktıları `tail` ile kısaltılır.
 - Uzun işler subagent'lara bölünür; ana context küçük kalır.
-- `/devir` + `/devam` uzun session'ları sıfırlamanın en ucuz yolu.
+- `/devir` + `/devam`, uzun session'ları sıfırlamanın en ucuz yoludur.
 
 ## Gereksinimler ve sınırlamalar
 
-- **macOS.** `/uyku` `pmset`, `caffeinate` ve BSD `date` kullanır. Diğer skill'ler Linux'ta da büyük ölçüde çalışır ama test edilmedi.
-- `jq` (macOS 15+ ile gelir; yoksa `brew install jq`), `git`, `python3`
-- İsteğe bağlı: `pdftotext` (`brew install poppler`) — yoksa `/analiz` PDF'leri görsel okur.
-- **Claude Code masaüstü uygulaması önerilir.** `/uyku`'nun kullanım yüzdesi kuralları uygulamanın kullanım aracına, `/devir`'in yeni session açması uygulamanın session aracına dayanır. Terminalde de çalışır; o zaman yüzde kuralları uygulanmaz (pil, bitiş saati ve kuyruk kuralları yine geçerli).
-- Skill frontmatter hook'ları gerektirir (güncel Claude Code sürümleri).
+- **macOS.** `/uyku`; `pmset`, `caffeinate` ve BSD `date` kullanır. Diğer skill'ler Linux'ta da büyük ölçüde çalışır ama test edilmedi.
+- `jq` (macOS 15 ve sonrasında hazır gelir; yoksa `brew install jq`), `git`, `python3`.
+- İsteğe bağlı: `pdftotext` (`brew install poppler`). Yoksa `/analiz` PDF'leri görsel okur.
+- **Claude Code masaüstü uygulaması önerilir.** `/uyku`'nun kullanım yüzdesi kuralları uygulamanın kullanım aracına, `/devir`'in yeni session açması uygulamanın session aracına dayanır. Terminalde de çalışır; o zaman yüzde kuralları uygulanmaz, pil, bitiş saati ve kuyruk kuralları yine geçerlidir.
+- Claude Code'un yerel session'larında çalışır. claude.ai/code'daki bulut session'ları yerel plugin'leri yüklemez.
 
 ## Testler
 
@@ -227,11 +256,16 @@ Notlar repo dışında durur — commit'lere karışmaz. Anahtar ana reponun yol
 ./tests/calistir.sh
 ```
 
-95 kontrol: script sözdizimi, frontmatter, uyku durum makinesi (pil/priz, bitiş saati, bekleme, subagent, takılma), koruma kuralları (30 komut/araç), API hatası sonrası uyandırma, worktree'ler arası not dizini, secret/debug taraması. Geçici bir `HOME` kullanır; gerçek dosyalarına dokunmaz.
+102 kontrol: script söz dizimi, frontmatter, plugin paketi (manifest, iki kurulum şeklinde hook yolları), uyku durum makinesi (pil/priz, bitiş saati, bekleme, subagent, takılma), koruma kuralları (30 komut ve araç), API hatası sonrası uyandırma, worktree'ler arası not dizini, secret ve debug taraması. Geçici bir `HOME` kullanır; gerçek dosyalarına dokunmaz.
+
+Plugin paketini doğrulamak için: `claude plugin validate --strict .`
 
 ## Proje yapısı
 
 ```
+.claude-plugin/
+├── plugin.json               ← plugin: wiener
+└── marketplace.json          ← marketplace: wiener-tools
 skills/
 ├── analiz/SKILL.md
 ├── devir/SKILL.md
@@ -249,32 +283,18 @@ skills/
 ├── haftalik/{SKILL.md, scripts/topla.sh}
 ├── mobil-tur/SKILL.md
 └── ortak/scripts/notlar-dizini.sh
-kur.sh
+kur.sh                        ← geliştirici kurulumu
 tests/calistir.sh
 ```
 
 ## Özelleştirme
 
-Skill'ler düz Markdown'dır; `skills/<ad>/SKILL.md` dosyasını düzenle, kaydet — symlink ile kurduysan Claude Code değişikliği hemen görür. Varsayılan eşikleri (`bitis`, `pil`, `limit`, `haftalik`) `skills/uyku/SKILL.md` içinde değiştirebilirsin. Koruma kurallarına desen eklemek için `skills/uyku/scripts/uyku-koruma.sh` → `desenler`; eklediğin kural için `tests/calistir.sh`'a bir satır eklemeyi unutma.
+Varsayılan eşikleri (`bitis`, `pil`, `limit`, `haftalik`) `skills/uyku/SKILL.md` içinde değiştirebilirsin. Koruma kurallarına desen eklemek için `skills/uyku/scripts/uyku-koruma.sh` dosyasındaki `desenler` listesine bak; eklediğin her kural için `tests/calistir.sh`'a bir satır eklemeyi unutma. Skill'lerden birini kendi işine göre değiştirmek istersen geliştirici kurulumunu kullan.
 
 ## Katkı
 
-Issue ve PR'lar açık. Göndermeden önce `./tests/calistir.sh` çalıştır. Skill metinleri Türkçe; yeni skill eklerken aynı üslubu (kısa, emir kipinde, token'a duyarlı) korumaya çalış.
+Issue ve PR'lar açık. Göndermeden önce `./tests/calistir.sh` ve `claude plugin validate --strict .` çalıştır. Skill metinleri Türkçe; yeni skill eklerken aynı üslubu (kısa, emir kipinde, token'a duyarlı) korumaya çalış.
 
 ## Lisans
 
-[MIT](LICENSE)
-
----
-
-## English summary
-
-**claude-skills-tr** is a set of Turkish-language [Claude Code](https://code.claude.com) skills for everyday development work:
-
-- **`/analiz`** — turns a requirements PDF or meeting notes into a requirement-by-requirement gap analysis (exists / partial / missing / conflicting) and implements it on a branch, asking only about conflicting or ambiguous items.
-- **`/uyku`** ("sleep") — an overnight mode that keeps working through a task queue while you sleep. Skill-scoped hooks prevent premature stops, block irreversible actions (push, merge, deploy, publish, outbound messages), pause until the 5-hour usage window resets, stop at a battery threshold (on battery only), a deadline or a weekly usage cap, and recover from transient API errors. Critical decisions are deferred to a morning report.
-- **`/gunaydin`** ("good morning") — summarizes the night report and walks you through deferred decisions.
-- **`/devir` / `/devam`** ("hand off" / "continue") — write a compact handoff note and resume from it in a fresh session, instead of dragging a huge context along.
-- **`/kontrol`**, **`/rapor`**, **`/haftalik`**, **`/mobil-tur`** — pre-push checks with secret scanning, non-technical status reports for managers, weekly summaries across all repos, and a visual QA pass in the iOS/Android simulator.
-
-Install with `./kur.sh` (symlinks into `~/.claude/skills`). Requires macOS, `jq`, `git` and `python3`; best used in the Claude Code desktop app.
+[MIT](LICENSE) © Wiener Labs

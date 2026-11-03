@@ -11,7 +11,7 @@ Kullanıcının ek talimatı: $ARGUMENTS
 ## Devir notu ve mevcut durum
 
 ```!
-d=$(~/.claude/skills/ortak/scripts/notlar-dizini.sh)
+d=$(${CLAUDE_SKILL_DIR}/../ortak/scripts/notlar-dizini.sh)
 echo "Not dizini: $d"
 echo "Klasör: $(pwd) · Dal: $(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'git yok')"
 echo "--- commit edilmemiş ---"; git status --short 2>/dev/null | head -20 || true

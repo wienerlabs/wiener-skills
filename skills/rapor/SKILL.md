@@ -11,13 +11,13 @@ Argümanlar: $ARGUMENTS
 ## Kaynaklar
 
 ```!
-d=$(~/.claude/skills/ortak/scripts/notlar-dizini.sh raporlar)
+d=$(${CLAUDE_SKILL_DIR}/../ortak/scripts/notlar-dizini.sh raporlar)
 echo "Rapor dizini: $d"
 echo "Son raporlar: $(ls -t "$d" 2>/dev/null | head -3 | tr '\n' ' ')"
 echo "Git kullanıcısı: $(git config user.name 2>/dev/null) <$(git config user.email 2>/dev/null)>"
 echo "Dal: $(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'git yok')"
 echo "İstek dokümanları:"; ls -t docs/istekler/*.md 2>/dev/null | head -5 || echo "(yok)"
-echo "Gece raporları:"; ls -t "$(~/.claude/skills/ortak/scripts/notlar-dizini.sh gece)" 2>/dev/null | head -3 || true
+echo "Gece raporları:"; ls -t "$(${CLAUDE_SKILL_DIR}/../ortak/scripts/notlar-dizini.sh gece)" 2>/dev/null | head -3 || true
 ```
 
 ## Adımlar

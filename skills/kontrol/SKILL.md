@@ -26,7 +26,7 @@ Her komut için: `set -o pipefail; <komut> 2>&1 | tail -40`
 
 ## 3. Değişiklik taraması
 
-`~/.claude/skills/kontrol/scripts/tara.sh [taban-dal]`
+`${CLAUDE_SKILL_DIR}/../kontrol/scripts/tara.sh [taban-dal]`
 
 Bulguları değerlendir; yanlış alarmları (test fixture'ı, örnek değer, bilerek bırakılmış log) ele ve neden elediğini tek satırla yaz.
 

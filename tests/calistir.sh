@@ -43,6 +43,21 @@ for f in "$SK"/*/SKILL.md; do
   grep -q '^description: .\{20,\}' "$f"; ok "$ad: description var" $? 0
 done
 
+bolum "Plugin paketi"
+ok "SKILL.md'lerde sabit kurulum yolu yok" "$(grep -lE '~/\.claude/skills/|\$HOME/\.claude/skills/' "$SK"/*/SKILL.md)" ""
+ok "uyku hook'ları plugin ve kişisel kurulumda aynı yolu çözer" \
+  "$(grep -cF '[ -d "$r/skills/uyku" ] && r="$r/skills/uyku"; exec "$r/scripts/uyku-' "$SK/uyku/SKILL.md")" 3
+# Hook komutunu iki kurulum şekliyle de gerçekten çalıştır: CLAUDE_PLUGIN_ROOT plugin kökü / skill klasörü
+hook_cmd=$(awk '/^  Stop:/{f=1} f && /command:/{sub(/^ *command: \x27/, ""); sub(/\x27$/, ""); print; exit}' "$SK/uyku/SKILL.md")
+for kurulum in "plugin:$REPO" "kişisel:$SK/uyku"; do
+  echo '{"session_id":"kayitsiz"}' | CLAUDE_PLUGIN_ROOT="${kurulum#*:}" bash -c "$hook_cmd"
+  ok "Stop hook komutu çalışır (${kurulum%%:*} kurulum)" $? 0
+done
+jq -e . "$REPO/.claude-plugin/plugin.json" >/dev/null; ok "plugin.json geçerli JSON" $? 0
+jq -e . "$REPO/.claude-plugin/marketplace.json" >/dev/null; ok "marketplace.json geçerli JSON" $? 0
+ok "marketplace'teki plugin adı manifestle aynı" \
+  "$(jq -r '.plugins[0].name' "$REPO/.claude-plugin/marketplace.json")" "$(jq -r .name "$REPO/.claude-plugin/plugin.json")"
+
 # ---------------------------------------------------------------------------
 bolum "uyku.sh"
 S=test-uyku

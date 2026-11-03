@@ -13,7 +13,7 @@ Kullanıcının ek notu: $ARGUMENTS
 ## Mevcut durum
 
 ```!
-echo "Not dizini: $(~/.claude/skills/ortak/scripts/notlar-dizini.sh)"
+echo "Not dizini: $(${CLAUDE_SKILL_DIR}/../ortak/scripts/notlar-dizini.sh)"
 echo "Klasör: $(pwd)"
 echo "Dal: $(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'git yok')"
 echo "Varsayılan dal: $(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null || echo 'bilinmiyor')"

@@ -8,7 +8,7 @@ argument-hint: "[gün=7] [--patron] [kök dizin]"
 
 Argümanlar: $ARGUMENTS (`--patron`: teknik olmayan dil)
 
-1. Topla: `~/.claude/skills/haftalik/scripts/topla.sh [gün] [kök]`
+1. Topla: `${CLAUDE_SKILL_DIR}/../haftalik/scripts/topla.sh [gün] [kök]`
    Diff okuma; commit mesajları yeterli. Bir projede mesajlar anlamsızsa ("fix", "wip") sadece o projede birkaç commit için `git -C <proje> show --stat <hash>` bak.
 2. Yaz:
 

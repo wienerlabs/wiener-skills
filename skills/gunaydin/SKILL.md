@@ -11,15 +11,15 @@ disable-model-invocation: true
 ```!
 echo "Bu session: ${CLAUDE_SESSION_ID}"
 echo "--- bu projenin uyku kayıtları (en yeni önce) ---"
-~/.claude/skills/uyku/scripts/uyku.sh bul 2>/dev/null || true
+${CLAUDE_SKILL_DIR}/../uyku/scripts/uyku.sh bul 2>/dev/null || true
 echo "--- son gece raporları ---"
-ls -t "$(~/.claude/skills/ortak/scripts/notlar-dizini.sh gece)" 2>/dev/null | head -3 || true
+ls -t "$(${CLAUDE_SKILL_DIR}/../ortak/scripts/notlar-dizini.sh gece)" 2>/dev/null | head -3 || true
 ```
 
 ## Adımlar
 
 1. **Uyku modunu kapat.** Kayıt listesinde bu session varsa onu, yoksa en yeni kaydı seç:
-   `~/.claude/skills/uyku/scripts/uyku.sh bitir <session_id>`
+   `${CLAUDE_SKILL_DIR}/../uyku/scripts/uyku.sh bitir <session_id>`
    Bu, hook'ları devre dışı bırakır ve bekleme sürecini sonlandırır. Hiç kayıt yoksa en yeni gece raporuyla devam et; rapor da yoksa "Gece raporu bulunamadı" de ve dur.
 2. **Raporu oku** (kayıttaki `rapor:` yolu). Durum `hata` ya da `takildi` ise nedenini ilk satırda söyle.
 3. **Özet sun** (en fazla ~15 satır):

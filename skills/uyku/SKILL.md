@@ -3,22 +3,23 @@ name: uyku
 description: Gece modu — kullanıcı uyurken kritik kararları sabaha bırakıp geri kalan işi pil, kullanım limiti ve bitiş saatine göre otonom sürdürür. Sabah /gunaydin ile kapatılır.
 argument-hint: "[görevler] [bitis=08:00] [pil=27] [limit=80] [haftalik=60]"
 disable-model-invocation: true
+# CLAUDE_PLUGIN_ROOT: plugin olarak kurulunca plugin kökü, kişisel kurulumda bu skill'in klasörü.
 hooks:
   Stop:
     - hooks:
         - type: command
-          command: "$HOME/.claude/skills/uyku/scripts/uyku-stop.sh"
+          command: 'r="${CLAUDE_PLUGIN_ROOT}"; [ -d "$r/skills/uyku" ] && r="$r/skills/uyku"; exec "$r/scripts/uyku-stop.sh"'
           timeout: 30
   PreToolUse:
     - matcher: "Bash|mcp__.*"
       hooks:
         - type: command
-          command: "$HOME/.claude/skills/uyku/scripts/uyku-koruma.sh"
+          command: 'r="${CLAUDE_PLUGIN_ROOT}"; [ -d "$r/skills/uyku" ] && r="$r/skills/uyku"; exec "$r/scripts/uyku-koruma.sh"'
           timeout: 10
   StopFailure:
     - hooks:
         - type: command
-          command: "$HOME/.claude/skills/uyku/scripts/uyku-hata.sh"
+          command: 'r="${CLAUDE_PLUGIN_ROOT}"; [ -d "$r/skills/uyku" ] && r="$r/skills/uyku"; exec "$r/scripts/uyku-hata.sh"'
           asyncRewake: true
           timeout: 21600
 ---
@@ -28,7 +29,7 @@ hooks:
 Kullanıcı uyuyor. Sabaha kadar onu beklemeden çalışacaksın.
 
 - Session: `${CLAUDE_SESSION_ID}`
-- Yardımcı: `~/.claude/skills/uyku/scripts/uyku.sh` (aşağıda `uyku.sh` diye geçer; her çağrıda tam yolu yaz)
+- Yardımcı: `${CLAUDE_SKILL_DIR}/../uyku/scripts/uyku.sh` (aşağıda `uyku.sh` diye geçer; her çağrıda tam yolu yaz)
 - Argümanlar: $ARGUMENTS
 
 ## Değişmez kurallar
@@ -49,11 +50,11 @@ Kullanıcı uyuyor. Sabaha kadar onu beklemeden çalışacaksın.
 4. **Görev kuyruğu**, bu sırayla topla:
    a. argümanlardaki görevler
    b. bu konuşmada yarım kalan işler
-   c. `$(~/.claude/skills/ortak/scripts/notlar-dizini.sh)/devir.md` → "Sıradaki adımlar"
+   c. `$(${CLAUDE_SKILL_DIR}/../ortak/scripts/notlar-dizini.sh)/devir.md` → "Sıradaki adımlar"
    d. en yeni `docs/istekler/*.md` → sonucu boş maddeler
    Her görevi tek cümleyle, bir-iki saatte bitecek boyutta yaz; büyükleri böl. **Kuyruk boşsa başlama**, kullanıcıya söyle.
 5. **Kullanım:** `mcp__ccd_session_mgmt__get_usage` (gerekirse ToolSearch ile `select:` yükle) → 5 saatlik % ve sıfırlanma zamanı, haftalık %. Haftalık zaten tavanın üstündeyse başlama. Araç yoksa (terminal) yüzde kuralları uygulanamaz: bunu rapora yaz, diğer kurallarla devam et.
-6. **Rapor dosyası:** `$(~/.claude/skills/ortak/scripts/notlar-dizini.sh gece)/<YYYY-MM-DD>.md` — aşağıdaki şablonla oluştur.
+6. **Rapor dosyası:** `$(${CLAUDE_SKILL_DIR}/../ortak/scripts/notlar-dizini.sh gece)/<YYYY-MM-DD>.md` — aşağıdaki şablonla oluştur.
 7. **Başlat:**
    `uyku.sh baslat ${CLAUDE_SESSION_ID} <HH:MM> <pil> <limit> <haftalik> <rapor_yolu>`
    `uyku.sh kullanim ${CLAUDE_SESSION_ID} <5s%> <haftalik%> <resetsAt>`

@@ -1,0 +1,15 @@
+{
+  "name": "wiener-tools",
+  "description": "Wiener Labs'ın Claude Code eklentileri.",
+  "owner": {
+    "name": "Wiener Labs",
+    "url": "https://wienerlabs.xyz"
+  },
+  "plugins": [
+    {
+      "name": "wiener",
+      "source": "./",
+      "description": "Claude Code için Türkçe iş akışı skill'leri: PDF'ten koda, gece modu, session devri, push öncesi kontrol, patron raporu."
+    }
+  ]
+}

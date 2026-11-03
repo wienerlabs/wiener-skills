@@ -40,7 +40,7 @@ Her ekran için: oraya git → ekran görüntüsü **`scale: 0.5`** (token tasar
 - `--karanlik` ile ana 2-3 ekranda karanlık mod (`set_appearance` ya da `xcrun simctl ui booted appearance dark`)
 
 Şüpheli bir şey görürsen o bölgeyi `zoom` ile tam çözünürlükte doğrula ve ekranı dosyaya kaydet:
-`$(~/.claude/skills/ortak/scripts/notlar-dizini.sh mobil-tur/<YYYY-MM-DD>)/<ekran>.png`
+`$(${CLAUDE_SKILL_DIR}/../ortak/scripts/notlar-dizini.sh mobil-tur/<YYYY-MM-DD>)/<ekran>.png`
 
 Toplamda 25 ekran görüntüsünü geçme. Bir ekrana ulaşılamıyorsa (giriş gerekiyor, veri yok) not et ve geç; test hesabı gerekiyorsa projenin seed/örnek dosyalarına bak, gerçek kimlik bilgisi isteme.
 
